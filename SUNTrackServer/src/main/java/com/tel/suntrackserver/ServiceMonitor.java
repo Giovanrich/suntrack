@@ -18,6 +18,9 @@ import java.util.regex.Pattern;
  */
 public class ServiceMonitor {
 
+    /**
+     * This method logs each service to its temp file
+     */
     public static void logServiceToTemp(String SERVICE_NAME) throws IOException {
         File file = new File("C:\\stlogs\\temp\\" + SERVICE_NAME);
         file.delete();
@@ -29,6 +32,9 @@ public class ServiceMonitor {
         }
     }
 
+    /**
+     * This method returns a method and is status from the temp log files
+     */
     public static String[] getServiceStatus(String SERVICE_NAME) throws FileNotFoundException, IOException {
         String[] log = new String[2];
         log[1] = "STOPPED";
@@ -46,14 +52,20 @@ public class ServiceMonitor {
         return log;
     }
 
+    /**
+     * This method persists a service to the status log file as an entry.
+     */
     public static void logService(String[] array) throws IOException {
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File("C:\\stlogs\\statuslog.txt"), true)), true);
         pw.println(new Date().toString() + " : " + array[0] + " Status: \t" + array[1]);
     }
 
-    public static boolean containsWord(String text, String word) {
+    /**
+     * The method that searches a given service_name from an input stream.
+     */
+    public static boolean containsWord(String text, String service_name) {
         final String REGEX_FIND_WORD = "(?i).*?\\b%s\\b.*?";
-        String regex = String.format(REGEX_FIND_WORD, Pattern.quote(word));
+        String regex = String.format(REGEX_FIND_WORD, Pattern.quote(service_name));
         return text.matches(regex);
     }
 }

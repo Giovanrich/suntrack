@@ -1,11 +1,15 @@
 package com.tel.suntrackserver;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,16 +26,10 @@ import javax.management.ObjectName;
  */
 public class HDDMonitor {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        String[] sunServices = {
-            "aspnet_state",
-            "MMCSS",
-            "Netman",
-            "Spooler",
-            "PcaSvc",
-            "sppsvc"
-        };
+        //the list of services that need monitoring
+        List<String> sunServices = getServices();
         //get all the drives in the system
         List<File> allDrives = Arrays.asList(File.listRoots());
         for (File f : allDrives) {
@@ -113,5 +111,22 @@ public class HDDMonitor {
                 Logger.getLogger(HDDMonitor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    
+    /**
+     * This method pulls services to be checked from a file.
+     */
+    public static List<String> getServices() throws FileNotFoundException, IOException {
+        List<String> services = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader("C:\\stlogs\\services.txt"));
+        String line = br.readLine();
+        while (line != null) {
+            if (line.trim().length() > 0) {
+                services.add(line);
+            }
+            line = br.readLine();
+        }
+        return services;
     }
 }
